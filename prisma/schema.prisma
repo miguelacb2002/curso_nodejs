@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuarios {
+  id                  Int      @id @default(autoincrement())
+  nombres             String
+  apellidos           String
+  correo              String
+  telefono            String?
+  clave               String
+  activo              Boolean  @default(true)
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime
+
+  @@unique([correo])
+}
+
+model Categorias {
+  id                  Int         @id @default(autoincrement())
+  nombre              String
+  productos           Productos[]
+  activo              Boolean     @default(true)
+  fecha_creacion      DateTime    @default(now())
+  fecha_actualizacion DateTime
+}
+
+model Productos {
+  id                  Int        @id @default(autoincrement())
+  nombre              String
+  categoria           Categorias @relation(fields: [categoriaId], references: [id])
+  categoriaId         Int
+  precioCompra        Float
+  precioVenta         Float
+  descripcion         String
+  referencia          String
+  activo              Boolean    @default(true)
+  fecha_creacion      DateTime   @default(now())
+  fecha_actualizacion DateTime
+
+  PedidosItems PedidosItems[]
+}
+
+model Clientes {
+  id                  Int      @id @default(autoincrement())
+  tipoDocumento       String
+  noDocumento         String
+  nombres             String
+  apellidos           String
+  correo              String
+  telefono            String?
+  direccion           String?
+  notas               String?
+  pedidos             Pedidos[]
+  activo              Boolean  @default(true)
+  fecha_creacion      DateTime @default(now())
+  fecha_actualizacion DateTime
+
+  @@unique([correo])
+}
+
+model Pedidos {
+  id                  Int            @id @default(autoincrement())
+  items               PedidosItems[]
+  cliente             Clientes @relation(fields: [clienteId],references: [id])
+  clienteId           Int
+  fecha_creacion      DateTime       @default(now())
+  fecha_actualizacion DateTime
+}
+
+model PedidosItems {
+  id                  Int       @id @default(autoincrement())
+  pedido              Pedidos   @relation(fields: [pedidoId], references: [id])
+  pedidoId            Int
+  producto            Productos @relation(fields: [productoId], references: [id])
+  productoId          Int
+  fecha_creacion      DateTime  @default(now())
+  fecha_actualizacion DateTime
+}
