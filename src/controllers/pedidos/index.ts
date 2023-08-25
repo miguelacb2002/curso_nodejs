@@ -23,7 +23,7 @@ const getPedido = async (req: Request, res: Response)=>{
         const result = await prisma.pedidos.findUnique({
         where: { id: parseInt(id)},
         include: {
-            cliente:true,
+            //cliente:true,
             items:{include:{producto:true}}
         }
         })

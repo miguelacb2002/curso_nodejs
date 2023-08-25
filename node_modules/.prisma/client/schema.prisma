@@ -80,5 +80,5 @@ model PedidosItems {
   producto            Productos @relation(fields: [productoId], references: [id])
   productoId          Int
   fecha_creacion      DateTime  @default(now())
-  fecha_actualizacion DateTime
+  fecha_actualizacion DateTime  @default(now())
 }
