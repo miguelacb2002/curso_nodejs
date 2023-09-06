@@ -4,6 +4,22 @@ import { Request, Response, response } from 'express'
 
 const prisma = new PrismaClient() // creacion instancia de prisma 
 
+const checkClientes = async (req:Request, res:Response)=>{
+    const {correo}=req.body
+    try{
+        const result = await prisma.clientes.findUnique({
+            where: { correo:correo} 
+        });
+        if(result){
+            return res.status(400).json({message:"El usuario ya existe"})
+        }
+        return res.status(200).json(result)
+    }catch(error){
+        console.log("Se presento un error", error)
+        return res.status(500).json(error)
+    }
+}
+
 const getClientes = async (req:Request, res:Response)=>{
 
     try{
@@ -69,5 +85,6 @@ export{
     getCliente,
     postCliente,
     putCliente,
-    deleteCliente
+    deleteCliente, 
+    checkClientes
 }
